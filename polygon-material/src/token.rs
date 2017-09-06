@@ -37,7 +37,7 @@ pub struct Span {
 }
 
 impl Span {
-    pub const fn new(begin: usize, end: usize) -> Span {
+    pub fn new(begin: usize, end: usize) -> Span {
         Span {
             begin: begin,
             end: end,

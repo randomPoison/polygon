@@ -1,5 +1,3 @@
-#![feature(const_fn)]
-
 extern crate polygon_material as material;
 
 use material::lexer::{Error as TokenError, ErrorData, Lexer};

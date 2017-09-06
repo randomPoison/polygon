@@ -1,5 +1,3 @@
-#![feature(const_fn)]
-
 extern crate polygon_math as math;
 
 pub mod lexer;
