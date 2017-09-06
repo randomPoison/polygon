@@ -5,14 +5,12 @@ version = "0.1.0"
 authors = ["David LeGare <excaliburhissheath@gmail.com>"]
 
 [dependencies]
-bootstrap_rs = { version = "0.0", path = "../bootstrap_rs" }
-gl-util = { version = "0.1", path = "../gl-util" }
-parse-bmp = { version = "0.1", path = "../parse-bmp" }
-polygon_math = { version = "0.1", path = "../polygon_math" }
-polygon_material = { version = "0.1", path = "../polygon-material" }
-stopwatch = { path = "../stopwatch" }
+bmp = "0.3"
+bootstrap_rs = { path = "../gunship-rs/lib/bootstrap_rs" }
+gl-util = { path = "../gunship-rs/lib/gl-util" }
+polygon-math = { path = "./polygon-math" }
+polygon-material = { path = "./polygon-material" }
+stopwatch = { path = "../gunship-rs/lib/stopwatch" }
 
 [dev_dependencies]
-parse-obj = { version = "0.1", path = "../parse-obj" }
-
-[workspace]
+obj-rs = "0.4"

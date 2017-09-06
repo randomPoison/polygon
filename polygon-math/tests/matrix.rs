@@ -1,5 +1,6 @@
-use matrix::Matrix4;
-use super::test::{Bencher, black_box};
+extern crate polygon_math;
+
+use polygon_math::matrix::Matrix4;
 
 #[test]
 fn matrix_equality()
@@ -15,17 +16,18 @@ fn matrix_equality()
 }
 
 #[test]
-#[should_panic(expected = "assertion failed")]
+#[should_panic(expected = "Cannot get matrix row 4 in a 4x4 matrix")]
 fn matrix_index_bounds() {
     let matrix = Matrix4::identity();
-    matrix[4][4];
+    matrix[4];
 }
 
 #[test]
-#[should_panic(expected = "assertion failed")]
+#[should_panic(expected = "Cannot get matrix row 4 in a 4x4 matrix")]
+#[allow(unused_mut)]
 fn matrix_mut_index_bounds() {
-    let mut _matrix = Matrix4::identity();
-    _matrix[4][4];
+    let mut matrix = Matrix4::identity();
+    matrix[4];
 }
 
 #[test]
@@ -56,14 +58,4 @@ fn matrix_translation()
     assert!(translation_2[1][3] == 2.0);
     assert!(translation_2[2][3] == 3.0);
     assert!(translation_2[3][3] == 1.0);
-}
-
-#[bench]
-fn bench_multiply(bencher: &mut Bencher) {
-    let first = Matrix4::identity();
-    let second = Matrix4::identity();
-
-    bencher.iter(|| {
-        black_box(first * second);
-    });
 }

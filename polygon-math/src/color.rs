@@ -66,11 +66,10 @@ impl Default for Color {
 
 impl From<[f32; 3]> for Color {
     fn from(from: [f32; 3]) -> Color {
-        let [r, g, b] = from;
         Color {
-            r: r,
-            g: g,
-            b: b,
+            r: from[0],
+            g: from[1],
+            b: from[2],
             a: 1.0,
         }
     }
@@ -78,12 +77,11 @@ impl From<[f32; 3]> for Color {
 
 impl From<[f32; 4]> for Color {
     fn from(from: [f32; 4]) -> Color {
-        let [r, g, b, a] = from;
         Color {
-            r: r,
-            g: g,
-            b: b,
-            a: a,
+            r: from[0],
+            g: from[1],
+            b: from[2],
+            a: from[3],
         }
     }
 }
