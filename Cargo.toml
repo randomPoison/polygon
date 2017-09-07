@@ -6,11 +6,10 @@ authors = ["David LeGare <excaliburhissheath@gmail.com>"]
 
 [dependencies]
 bmp = "0.3"
-bootstrap_rs = { path = "../gunship-rs/lib/bootstrap_rs" }
 gl-util = { path = "../gunship-rs/lib/gl-util" }
+image = "0.15"
 polygon-math = { path = "./polygon-math" }
 polygon-material = { path = "./polygon-material" }
-stopwatch = { path = "../gunship-rs/lib/stopwatch" }
 
 [dev_dependencies]
 obj-rs = "0.4"

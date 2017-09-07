@@ -2,7 +2,6 @@ pub extern crate gl_util;
 
 use {BuildMaterialError, Counter, GpuMesh, Renderer};
 use anchor::*;
-use bootstrap::window::Window;
 use camera::*;
 use geometry::mesh::{Mesh, VertexAttribute};
 use light::*;
@@ -21,7 +20,6 @@ use self::gl_util::texture::{
 use shader::Shader;
 use std::collections::HashMap;
 use std::str;
-use stopwatch::Stopwatch;
 use texture::*;
 
 static DEFAULT_SHADER_BYTES: &'static [u8] = include_bytes!("../../resources/materials/diffuse_lit.material");
@@ -57,18 +55,8 @@ pub struct GlRender {
 }
 
 impl GlRender {
-    pub fn new(window: &Window) -> Result<GlRender, Error> {
-        let _s = Stopwatch::new("Initializing OpenGl renderer");
-
-        let context = {
-            let _s = Stopwatch::new("Creating context");
-            Context::from_window(window)?
-        };
-
-        {
-            let _s = Stopwatch::new("Clearing buffer");
-            context.clear();
-        }
+    pub fn new(context: Context) -> Result<GlRender, Error> {
+        context.clear();
 
         let mut renderer = GlRender {
             context: context,
@@ -124,8 +112,6 @@ impl GlRender {
         has_setup_lights: &mut bool,
         has_setup_material: &mut bool,
     ) {
-        let _s = Stopwatch::new("Rendering mesh instance");
-
         let anchor = match mesh_instance.anchor() {
             Some(anchor_id) => self.anchors.get(&anchor_id).expect("No such anchor exists"),
             None => return,
@@ -175,15 +161,12 @@ impl GlRender {
         );
 
         draw_builder
-        .program(program)
-        .cull(Face::Back)
-        .depth_test(Comparison::Less);
+            .program(program)
+            .cull(Face::Back)
+            .depth_test(Comparison::Less);
 
         // Set uniform transforms.
-        {
-            let _stopwatch = Stopwatch::new("Transform uniforms");
-
-            draw_builder
+        draw_builder
             .uniform(
                 "model_transform",
                 GlMatrix {
@@ -233,12 +216,9 @@ impl GlRender {
                     transpose: true,
                 },
             );
-        }
 
         // Apply material attributes.
         if !*has_setup_material {
-            let _stopwatch = Stopwatch::new("Material uniforms");
-
             *has_setup_material = true;
 
             // Set uniform colors.
@@ -274,8 +254,6 @@ impl GlRender {
         // so we only specify them for the first draw and leave them the same after that.
         if !*has_setup_lights {
             *has_setup_lights = true;
-
-            let _stopwatch = Stopwatch::new("Setup lights");
 
             // TODO: Support having more than 8 lights active at a time. Maybe pick the 8
             // most relevant lights? Or simply support more lights at once in the shader.
@@ -317,11 +295,7 @@ impl GlRender {
             draw_builder.uniform("light_direction_view", Vector3::as_slice_of_arrays(&light_direction_view));
         }
 
-        {
-            let _s = Stopwatch::new("Draw mesh");
-
-            draw_builder.draw();
-        }
+        draw_builder.draw();
     }
 }
 
@@ -348,18 +322,11 @@ impl Drop for GlRender {
 
 impl Renderer for GlRender {
     fn draw(&mut self) {
-        let _stopwatch = Stopwatch::new("GLRender::draw()");
-
-        {
-            let _stopwatch = Stopwatch::new("Clearing buffer");
-            self.context.clear();
-        }
+        self.context.clear();
 
         // TODO: Support rendering multiple cameras.
         // TODO: Should we warn if there are no cameras?
         if let Some(camera) = self.cameras.values().next() {
-            let _stopwatch = Stopwatch::new("Rendering camera");
-
             let camera_anchor = match camera.anchor() {
                 Some(ref anchor_id) => self.anchors.get(anchor_id).expect("No such anchor exists"),
                 None => unimplemented!(),
@@ -369,8 +336,6 @@ impl Renderer for GlRender {
 
             // Render shared materials first.
             for (material_id, mesh_instances) in &self.mesh_instances_with_shared_materials {
-                let _s = Stopwatch::new("Rendering shared material");
-
                 let material = self.shared_materials.get(material_id).expect("No such material exists");
                 let mut has_setup_material = false;
 
@@ -402,10 +367,7 @@ impl Renderer for GlRender {
             }
         }
 
-        {
-            let _stopwatch = Stopwatch::new("Swap buffers");
-            self.context.swap_buffers();
-        }
+        self.context.swap_buffers();
     }
 
     fn default_material(&self) -> Material {
@@ -660,8 +622,8 @@ impl Renderer for GlRender {
         };
 
         // Create the Texture2d from the texture data.
-        let texture_result = match texture.data() {
-            &TextureData::f32(ref data) => {
+        let texture_result = match *texture.data() {
+            TextureData::f32(ref data) => {
                 GlTexture2d::new(
                     &self.context,
                     format,
@@ -670,25 +632,7 @@ impl Renderer for GlRender {
                     texture.height(),
                     &*data)
             },
-            &TextureData::u8(ref data) => {
-                GlTexture2d::new(
-                    &self.context,
-                    format,
-                    internal_format,
-                    texture.width(),
-                    texture.height(),
-                    &*data)
-            },
-            &TextureData::u8x3(ref data) => {
-                GlTexture2d::new(
-                    &self.context,
-                    format,
-                    internal_format,
-                    texture.width(),
-                    texture.height(),
-                    &*data)
-            },
-            &TextureData::u8x4(ref data) => {
+            TextureData::u8(ref data) => {
                 GlTexture2d::new(
                     &self.context,
                     format,

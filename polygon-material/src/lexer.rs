@@ -52,12 +52,12 @@ impl<'a> Lexer<'a> {
 
         // See if token is a number literal.
         if character.is_numeric_part() {
-            return unimplemented!();
+            unimplemented!();
         }
 
         // See if character is string literal.
         if character == '"' {
-            return unimplemented!();
+            unimplemented!();
         }
 
         // See if token is program literal.

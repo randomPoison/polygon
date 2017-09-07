@@ -1,7 +1,4 @@
-use parse_bmp::{
-    Bitmap,
-    BitmapData,
-};
+use image::DynamicImage;
 
 /// Represents texture data that has been sent to the GPU.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
@@ -25,27 +22,17 @@ pub struct Texture2d {
 
 impl Texture2d {
     /// Loads a new `Texture` from a bitmap file.
-    pub fn from_bitmap(bitmap: Bitmap) -> Texture2d {
-        let texture = match bitmap.data() {
-            &BitmapData::Bgr(ref data) => {
-                Texture2d {
-                    width: bitmap.width(),
-                    height: bitmap.height(),
-                    format: DataFormat::Bgr,
-                    data: TextureData::u8x3(data.clone()), // TODO: Don't clone the data.
-                }
-            },
-            &BitmapData::Bgra(ref data) => {
-                Texture2d {
-                    width: bitmap.width(),
-                    height: bitmap.height(),
-                    format: DataFormat::Bgra,
-                    data: TextureData::u8x4(data.clone()), // TODO: Don't clone the data.
-                }
-            },
-        };
+    pub fn from_bitmap(image: DynamicImage) -> Texture2d {
+        // TODO: We should directly support image types more directly. For simplicity, we'll
+        // start by converting everything to RGBA, but we probably don't need to do that.
+        let image = image.to_rgba();
 
-        texture
+        Texture2d {
+            width: image.width() as usize,
+            height: image.height() as usize,
+            format: DataFormat::Rgba,
+            data: TextureData::u8(image.into_raw()),
+        }
     }
 
     /// Returns the width of the texture.
@@ -54,7 +41,7 @@ impl Texture2d {
     }
 
     /// Returns the height of the texture.
-    pub fn height(&self) -> usize() {
+    pub fn height(&self) -> usize {
         self.height
     }
 
@@ -81,17 +68,9 @@ pub enum DataFormat {
 /// An enum representing the possible data types for a texture.
 ///
 /// `TextureData` also owns the texture raw data buffer in order to maintain type safety.
-///
-/// TODO: Should each element represent a single pixel, or is it okay to have multiple array
-/// elements combine to make a single pixel? I.e. for an RGB texture should it be required to use
-/// `u8x3` or should it be okay to use `u8` 3 elements at a time? Since the two have the same
-/// in-memory representation we can always transmute between the two so it's not a performance
-/// issue.
 #[allow(bad_style)]
 #[derive(Debug, Clone, PartialEq)]
 pub enum TextureData {
     f32(Vec<f32>),
     u8(Vec<u8>),
-    u8x3(Vec<(u8, u8, u8)>),
-    u8x4(Vec<(u8, u8, u8, u8)>),
 }

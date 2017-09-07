@@ -1,9 +1,7 @@
-extern crate bootstrap_rs as bootstrap;
-extern crate parse_bmp;
+extern crate bmp;
+extern crate image;
 extern crate polygon_material;
-extern crate stopwatch;
-
-pub extern crate polygon_math as math;
+extern crate polygon_math as math;
 
 // NOTE: This is a "standard" workaround for Rust's nasty macro visibility rules. Once the new
 // macro system arrives this can be removed.
@@ -21,7 +19,6 @@ pub mod shader;
 pub mod texture;
 
 use anchor::*;
-use bootstrap::window::Window;
 use camera::*;
 use geometry::mesh::Mesh;
 use light::*;
@@ -95,27 +92,6 @@ pub trait Renderer: 'static + Send {
     fn get_light_mut(&mut self, light_id: LightId) -> Option<&mut Light>;
 
     fn set_ambient_light(&mut self, color: Color);
-}
-
-/// A helper struct for selecting and initializing the most suitable renderer for the client's
-/// needs.
-pub struct RendererBuilder<'a> {
-    window: &'a Window,
-}
-
-impl<'a> RendererBuilder<'a> {
-    /// Creates a new builder object.
-    pub fn new(window: &Window) -> RendererBuilder {
-        RendererBuilder {
-            window: window,
-        }
-    }
-
-    /// Constructs a new renderer using the options set in the builder.
-    pub fn build(&mut self) -> Box<Renderer> {
-        let renderer = gl::GlRender::new(self.window).unwrap();
-        Box::new(renderer) as Box<Renderer>
-    }
 }
 
 /// Extra special secret trait for keep counter functionality local to this crate.
