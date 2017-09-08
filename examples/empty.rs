@@ -1,13 +1,16 @@
-extern crate bootstrap_rs as bootstrap;
 extern crate polygon;
+extern crate winit;
 
-use bootstrap::window::*;
-use polygon::*;
+use polygon::gl::GlRender;
+use polygon::Renderer;
+use winit::*;
 
 fn main() {
+    let events_loop = EventsLoop::new();
+    let window = Window::new(&events_loop);
+
     // Open a window and create the renderer instance.
-    let mut window = Window::new("Hello, Triangle!").unwrap();
-    let mut renderer = RendererBuilder::new(&window).build();
+    let mut renderer = GlRender::new(window.context()).unwrap();
 
     'outer: loop {
         while let Some(message) = window.next_message() {
