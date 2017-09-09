@@ -1,0 +1,15 @@
+[package]
+name = "gl-winit"
+version = "0.1.0"
+authors = ["David LeGare <excaliburhissheath@gmail.com>"]
+
+[dependencies]
+gdi32-sys = "0.2"
+gl-util = { path = "../gl-util" }
+gl-raw = { path = "../gl-raw" }
+kernel32-sys = "0.2"
+winit = "0.7"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+user32-sys = "0.1"
+winapi = "0.2.8"

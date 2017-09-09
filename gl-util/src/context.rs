@@ -13,8 +13,8 @@ pub struct Context {
 
 impl Context {
     /// Initializes global OpenGL state and creates the OpenGL context needed to perform rendering.
-    pub fn from_device_context(device_context: gl::DeviceContext) -> Result<Context, Error> {
-        pub extern "system" fn debug_callback(
+    pub fn from_raw_context(context: gl::Context) -> Result<Context, Error> {
+        extern "system" fn debug_callback(
             source: DebugSource,
             message_type: DebugType,
             object_id: u32,
@@ -38,14 +38,11 @@ impl Context {
                 message_type,
                 object_id,
                 severity,
-                message);
+                message,
+            );
         }
 
         unsafe {
-            let context =
-                gl::create_context(device_context)
-                .ok_or(Error::UnableToCreateRenderContext)?;
-
             {
                 let _guard = ::context::ContextGuard::new(context);
 

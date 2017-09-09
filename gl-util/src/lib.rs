@@ -33,10 +33,6 @@ pub mod context;
 pub mod shader;
 pub mod texture;
 
-#[cfg(target_os="windows")]
-#[path="windows\\mod.rs"]
-pub mod platform;
-
 /// Describes the layout of vertex data in a `VertexBuffer`.
 ///
 /// See [`VertexArray::map_attrib_location()`][VertexArray::map_attrib_location] for more information.

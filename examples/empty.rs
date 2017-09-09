@@ -1,25 +1,27 @@
 extern crate polygon;
 extern crate winit;
+extern crate gl_winit;
 
+use gl_winit::CreateContext;
 use polygon::gl::GlRender;
 use polygon::Renderer;
 use winit::*;
 
 fn main() {
-    let events_loop = EventsLoop::new();
-    let window = Window::new(&events_loop);
+    let mut events_loop = EventsLoop::new();
+    let window = Window::new(&events_loop).unwrap();
 
     // Open a window and create the renderer instance.
-    let mut renderer = GlRender::new(window.context()).unwrap();
+    let context = window.create_context().unwrap();
+    let mut renderer = GlRender::new(context).unwrap();
 
-    'outer: loop {
-        while let Some(message) = window.next_message() {
-            if let Message::Close = message {
-                break 'outer;
-            }
+    events_loop.run_forever(|event| {
+        match event {
+            Event::WindowEvent { event: WindowEvent::Closed, .. } => {
+                println!("The window was closed ; stopping");
+                ControlFlow::Break
+            },
+            _ => ControlFlow::Continue,
         }
-
-        // Render our empty scene.
-        renderer.draw();
-    }
+    })
 }

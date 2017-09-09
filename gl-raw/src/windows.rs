@@ -11,9 +11,17 @@ use self::winapi::*;
 pub type DeviceContext = HDC;
 pub type Context = (HDC, HGLRC);
 
+/// Creates a new OpenGL context for a given device context (usually a window).
+///
+/// If this fails, make sure you have set the window's pixel format before trying to create
+/// the context. See the docs for [`wglCreateContext`] for more information.
+///
+/// [`wglCreateContext`]: https://msdn.microsoft.com/en-us/library/windows/desktop/dd374379(v=vs.85).aspx
 pub unsafe fn create_context(device_context: DeviceContext) -> Option<Context> {
     let tmp_context = opengl32::wglCreateContext(device_context);
     if tmp_context.is_null() {
+        let error = kernel32::GetLastError();
+        println!("WARNING: Failed to created temporary OpenGL context, last error: {:#x}", error);
         return None;
     }
 
