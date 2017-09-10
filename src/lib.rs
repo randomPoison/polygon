@@ -1,7 +1,7 @@
+pub extern crate polygon_math as math;
 extern crate bmp;
 extern crate image;
 extern crate polygon_material;
-extern crate polygon_math as math;
 
 // NOTE: This is a "standard" workaround for Rust's nasty macro visibility rules. Once the new
 // macro system arrives this can be removed.

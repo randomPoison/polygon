@@ -8,20 +8,21 @@ use polygon::Renderer;
 use winit::*;
 
 fn main() {
+    // Open a window.
     let mut events_loop = EventsLoop::new();
     let window = Window::new(&events_loop).unwrap();
 
-    // Open a window and create the renderer instance.
+    // Create the OpenGL context and the renderer.
     let context = window.create_context().unwrap();
     let mut renderer = GlRender::new(context).unwrap();
 
     events_loop.run_forever(|event| {
         match event {
             Event::WindowEvent { event: WindowEvent::Closed, .. } => {
-                println!("The window was closed ; stopping");
                 ControlFlow::Break
-            },
+            }
+
             _ => ControlFlow::Continue,
         }
-    })
+    });
 }

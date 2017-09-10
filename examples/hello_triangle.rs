@@ -1,13 +1,16 @@
-extern crate bootstrap_rs as bootstrap;
+extern crate gl_winit;
 extern crate polygon;
+extern crate winit;
 
-use bootstrap::window::*;
+use gl_winit::CreateContext;
 use polygon::*;
 use polygon::anchor::*;
 use polygon::camera::*;
+use polygon::gl::GlRender;
 use polygon::math::*;
 use polygon::mesh_instance::*;
 use polygon::geometry::mesh::*;
+use winit::*;
 
 static VERTEX_POSITIONS: [f32; 12] = [
     -1.0, -1.0, 0.0, 1.0,
@@ -18,9 +21,13 @@ static VERTEX_POSITIONS: [f32; 12] = [
 static INDICES: [u32; 3] = [0, 1, 2];
 
 fn main() {
-    // Open a window and create the renderer instance.
-    let mut window = Window::new("Hello, Triangle!").unwrap();
-    let mut renderer = RendererBuilder::new(&window).build();
+    // Open a window.
+    let mut events_loop = EventsLoop::new();
+    let window = Window::new(&events_loop).unwrap();
+
+    // Create the OpenGL context and the renderer.
+    let context = window.create_context().unwrap();
+    let mut renderer = GlRender::new(context).unwrap();
 
     // Build a triangle mesh.
     let mesh = MeshBuilder::new()
@@ -57,13 +64,17 @@ fn main() {
     // Set ambient color to pure white so we don't need to worry about lighting.
     renderer.set_ambient_light(Color::rgb(1.0, 1.0, 1.0));
 
-    'outer: loop {
-        while let Some(message) = window.next_message() {
-            match message {
-                Message::Close => break 'outer,
-                _ => {},
+    let mut loop_active = true;
+    while loop_active {
+        events_loop.poll_events(|event| {
+            match event {
+                Event::WindowEvent { event: WindowEvent::Closed, .. } => {
+                    loop_active = false;
+                }
+
+                _ => {}
             }
-        }
+        });
 
         // Rotate the triangle slightly.
         {

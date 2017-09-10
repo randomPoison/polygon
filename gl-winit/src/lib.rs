@@ -28,12 +28,10 @@ mod windows {
     impl CreateContext for ::winit::Window {
         fn create_context(&self) -> Result<Context, CreationError> {
             let window_handle = self.get_hwnd();
-            println!("hwnd: {:?}", window_handle);
             assert!(!window_handle.is_null(), "Window handle was null???");
 
             // Get the device context for the window, returning an error if it's null.
             let device_context = unsafe { user32::GetDC(window_handle as *mut _) };
-            println!("dc: {:?}", device_context);
             if device_context.is_null() {
                 return Err(CreationError);
             }
@@ -86,10 +84,7 @@ mod windows {
             };
 
             // Create an OpenGL context from the raw context.
-            Context::from_raw_context(raw_context).map_err(|error| {
-                println!("error: {:?}", error);
-                CreationError
-            })
+            Context::from_raw_context(raw_context).map_err(|error| CreationError)
         }
     }
 }
