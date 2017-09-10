@@ -21,8 +21,8 @@ pub struct Texture2d {
 }
 
 impl Texture2d {
-    /// Loads a new `Texture` from a bitmap file.
-    pub fn from_bitmap(image: DynamicImage) -> Texture2d {
+    /// Converts an image into a `Texture2d`.
+    pub fn from_image(image: DynamicImage) -> Texture2d {
         // TODO: We should directly support image types more directly. For simplicity, we'll
         // start by converting everything to RGBA, but we probably don't need to do that.
         let image = image.to_rgba();
