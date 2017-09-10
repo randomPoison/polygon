@@ -1,25 +1,35 @@
-extern crate bootstrap_rs as bootstrap;
+extern crate gl_winit;
+extern crate image;
 extern crate polygon;
+extern crate tobj;
+extern crate winit;
 
-use bootstrap::window::*;
+use gl_winit::CreateContext;
+use image::ImageFormat;
 use polygon::*;
 use polygon::anchor::*;
 use polygon::camera::*;
+use polygon::gl::GlRender;
 use polygon::light::*;
 use polygon::material::*;
 use polygon::math::*;
 use polygon::mesh_instance::*;
+use winit::*;
 
-mod utils;
+pub mod utils;
 
 fn main() {
-    // Open a window and create the renderer instance.
-    let mut window = Window::new("Hello, Triangle!").unwrap();
-    let mut renderer = RendererBuilder::new(&window).build();
+    // Open a window.
+    let mut events_loop = EventsLoop::new();
+    let window = Window::new(&events_loop).unwrap();
+
+    // Create the OpenGL context and the renderer.
+    let context = window.create_context().unwrap();
+    let mut renderer = GlRender::new(context).unwrap();
 
     // Build a triangle mesh.
     let mesh = utils::load_mesh("resources/meshes/epps_head.obj").unwrap();
-    let texture = utils::load_texture("resources/textures/structured.bmp");
+    let texture = utils::load_texture("resources/textures/structured.bmp", ImageFormat::BMP);
 
     // Send the mesh to the GPU.
     let gpu_mesh = renderer.register_mesh(&mesh);
@@ -62,13 +72,18 @@ fn main() {
     const LIGHT_RADIUS: f32 = 2.0;
 
     let mut t: f32 = 0.0;
-    'outer: loop {
-        while let Some(message) = window.next_message() {
-            match message {
-                Message::Close => break 'outer,
-                _ => {},
+    let mut loop_active = true;
+    while loop_active {
+        events_loop.poll_events(|event| {
+            match event {
+                Event::WindowEvent { event: WindowEvent::Closed, .. } => {
+                    loop_active = false;
+                }
+
+                _ => {}
             }
-        }
+        });
+        if !loop_active { break; }
 
         // Rotate the mesh slightly.
         {
