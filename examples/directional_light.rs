@@ -70,6 +70,7 @@ fn main() {
                 _ => {}
             }
         });
+        if !loop_active { break; }
 
         // Render the mesh.
         renderer.draw();
