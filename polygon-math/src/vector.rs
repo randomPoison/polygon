@@ -363,7 +363,7 @@ impl IndexMut<usize> for Vector3 {
 
 impl<'a> From<&'a [f32]> for Vector3 {
     fn from(from: &[f32]) -> Vector3 {
-        assert!(from.len() == 3);
+        assert_eq!(from.len(), 3, "Wrong number of elements to convert to `Vector3`");
 
         Vector3 {
             x: from[0],
@@ -373,8 +373,18 @@ impl<'a> From<&'a [f32]> for Vector3 {
     }
 }
 
-impl <'a> From<[f32; 3]> for Vector3 {
+impl From<[f32; 3]> for Vector3 {
     fn from(from: [f32; 3]) -> Vector3 {
+        Vector3 {
+            x: from[0],
+            y: from[1],
+            z: from[2],
+        }
+    }
+}
+
+impl<'a> From<&'a [f32; 3]> for Vector3 {
+    fn from(from: &'a [f32; 3]) -> Vector3 {
         Vector3 {
             x: from[0],
             y: from[1],
@@ -481,6 +491,34 @@ impl Default for Vector2 {
         Vector2 {
             x: 0.0,
             y: 0.0,
+        }
+    }
+}
+
+impl From<[f32; 2]> for Vector2 {
+    fn from(from: [f32; 2]) -> Vector2 {
+        Vector2 {
+            x: from[0],
+            y: from[1],
+        }
+    }
+}
+
+impl<'a> From<&'a [f32; 2]> for Vector2 {
+    fn from(from: &'a [f32; 2]) -> Vector2 {
+        Vector2 {
+            x: from[0],
+            y: from[1],
+        }
+    }
+}
+
+impl<'a> From<&'a [f32]> for Vector2 {
+    fn from(from: &'a [f32]) -> Vector2 {
+        assert_eq!(from.len(), 2, "Wrong number of elements to convert to `Vector2`");
+        Vector2 {
+            x: from[0],
+            y: from[1],
         }
     }
 }

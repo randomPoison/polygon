@@ -1,4 +1,4 @@
-pub extern crate polygon_math as math;
+extern crate polygon_math;
 extern crate bmp;
 extern crate image;
 extern crate polygon_material;
@@ -17,6 +17,10 @@ pub mod material;
 pub mod mesh_instance;
 pub mod shader;
 pub mod texture;
+
+pub mod math {
+    pub use polygon_math::*;
+}
 
 use anchor::*;
 use camera::*;
