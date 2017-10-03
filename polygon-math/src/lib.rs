@@ -1,3 +1,10 @@
+#[cfg(feature = "serde-impls")]
+extern crate serde;
+
+#[cfg_attr(feature = "serde-impls", macro_use)]
+#[cfg(feature = "serde-impls")]
+extern crate serde_derive;
+
 pub mod color;
 pub mod matrix;
 pub mod orientation;

@@ -13,13 +13,14 @@ use super::{IsZero, Dot};
 /// Matrices are row-major.
 #[derive(Clone, Copy)]
 #[repr(C)]
+#[cfg_attr(feature = "serde-impls", derive(Serialize, Deserialize))]
 pub struct Matrix4([[f32; 4]; 4]);
 
 impl Matrix4 {
     /// Create a new empy matrix.
     ///
     /// The result matrix is filled entirely with zeroes, it is NOT an identity
-    /// matrix. use Matrix4::identity() to get a new identit matrix.
+    /// matrix. use Matrix4::identity() to get a new identity matrix.
     pub fn new() -> Matrix4 {
         Matrix4([
             [0.0, 0.0, 0.0, 0.0],
@@ -292,6 +293,7 @@ impl Debug for Matrix4 {
 /// A 3x3 matrix that can be used to represent a combination of rotation and scale.
 #[derive(Clone, Copy)]
 #[repr(C)]
+#[cfg_attr(feature = "serde-impls", derive(Serialize, Deserialize))]
 pub struct Matrix3([[f32; 3]; 3]);
 
 impl Matrix3 {

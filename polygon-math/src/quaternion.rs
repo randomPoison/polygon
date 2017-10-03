@@ -19,6 +19,7 @@ use vector::Vector3;
 use super::{IsZero, Dot};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
+#[cfg_attr(feature = "serde-impls", derive(Serialize, Deserialize))]
 pub struct Quaternion {
     pub v: Vector3,
     pub w: f32,

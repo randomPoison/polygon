@@ -8,6 +8,7 @@ use std::slice;
 
 #[derive(Clone, Copy, PartialEq)]
 #[repr(C)]
+#[cfg_attr(feature = "serde-impls", derive(Serialize, Deserialize))]
 pub struct Vector3 {
     pub x: f32,
     pub y: f32,
@@ -434,6 +435,7 @@ impl Into<(f32, f32, f32)> for Vector3 {
 // ================================================================================================
 
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "serde-derive", derive(Serialize, Deserialize))]
 pub struct Vector2 {
     pub x: f32,
     pub y: f32,

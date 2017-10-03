@@ -12,6 +12,7 @@ use vector::Vector3;
 /// a `w` homogeneous coordinate for the purposes of linear algebra calculations.
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
+#[cfg_attr(feature = "serde-impls", derive(Serialize, Deserialize))]
 pub struct Point {
     pub x: f32,
     pub y: f32,

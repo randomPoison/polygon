@@ -15,3 +15,5 @@ polygon-material = { path = "./polygon-material" }
 gl-winit = { path = "./gl-winit" }
 tobj = "0.1.6"
 winit = "0.7"
+
+[workspace]

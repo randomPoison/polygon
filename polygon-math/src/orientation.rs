@@ -18,6 +18,7 @@ use vector::Vector3;
 ///   then `q3`. In theory that order shouldn't really matter, right? Rotation is commutative?
 // TODO: The innner quaternion should be `pub(crate)` once pub_restricted is stabilized.
 #[derive(Debug, Clone, Copy, PartialEq)]
+#[cfg_attr(feature = "serde-impls", derive(Serialize, Deserialize))]
 pub struct Orientation(pub Quaternion);
 
 impl Orientation {
