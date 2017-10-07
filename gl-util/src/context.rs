@@ -218,18 +218,6 @@ impl ContextInner {
     }
 }
 
-impl Drop for Context {
-    fn drop(&mut self) {
-        // TODO: This functionality was super buggy and would panic if the window had already
-        // or hadn't been opened yet or some such. This should be reimpl
-        //unsafe {
-        //    gl::make_current(self.raw);
-        //    gl::debug_message_callback(None, ptr::null_mut());
-        //    gl::destroy_context(self.raw)
-        //}
-    }
-}
-
 #[derive(Debug)]
 pub enum Error {
     /// Indicates that the program was unable to find an active device context.

@@ -299,27 +299,6 @@ impl GlRender {
     }
 }
 
-impl Drop for GlRender {
-    fn drop(&mut self) {
-        // Empty all containers to force cleanup of OpenGL primitives before we tear down the
-        // GL subsystem.
-        // TODO: Do we have to do this? It would be better if we could tear down the context
-        // without having to cleanup each GL resource, since deleting the context effectively
-        // deletes them all too. I think the problem here comes from the fact that by default
-        // the context gets dropped first, then the resources get dropped, and they can't be
-        // deleted once the context is gone. If we could get them to silently do nothing when
-        // dropped if the context has already been dropped, then we'd get faster shutdown.
-        self.shared_materials.clear();
-        self.meshes.clear();
-        self.textures.clear();
-        self.mesh_instances.clear();
-        self.anchors.clear();
-        self.cameras.clear();
-        self.lights.clear();
-        self.programs.clear();
-    }
-}
-
 impl Renderer for GlRender {
     fn draw(&mut self) {
         self.context.clear();

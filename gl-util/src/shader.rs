@@ -52,13 +52,6 @@ impl Shader {
     }
 }
 
-impl Drop for Shader {
-    fn drop(&mut self) {
-        let _context = ::context::ContextGuard::new(self.context);
-        unsafe { gl::delete_shader(self.shader_object); }
-    }
-}
-
 #[derive(Debug, Clone)]
 pub enum ShaderError {
     /// Indicates that the call to `gl::create_shader()` returned 0 (the null shader object).
@@ -211,13 +204,6 @@ impl Program {
 
     pub(crate) fn inner(&self) -> ProgramObject {
         self.program_object
-    }
-}
-
-impl Drop for Program {
-    fn drop(&mut self) {
-        let _guard = ::context::ContextGuard::new(self.context);
-        unsafe { gl::delete_program(self.inner()); }
     }
 }
 

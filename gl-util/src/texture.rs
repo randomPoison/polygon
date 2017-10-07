@@ -105,13 +105,6 @@ impl Texture2d {
     }
 }
 
-impl Drop for Texture2d {
-    fn drop(&mut self) {
-        let _guard = ::context::ContextGuard::new(self.context);
-        unsafe { gl::delete_textures(1, &mut self.inner()); }
-    }
-}
-
 pub trait TextureData {
     const DATA_TYPE: TextureDataType;
     const ELEMENTS: usize;

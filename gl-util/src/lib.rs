@@ -178,19 +178,6 @@ impl VertexArray {
     }
 }
 
-impl Drop for VertexArray {
-    fn drop(&mut self) {
-        let mut context = self.context.borrow_mut();
-        let _guard = ::context::ContextGuard::new(context.raw());
-        let buffers = &mut [self.vertex_buffer_name, self.index_buffer.clone().map_or(BufferName::null(), |buf| buf.name)];
-        unsafe {
-            gl::delete_vertex_arrays(1, &mut self.vertex_array_name);
-            gl::delete_buffers(2, buffers.as_ptr());
-        }
-        context.unbind_vertex_array(self.vertex_array_name);
-    }
-}
-
 /// Represents a buffer of index data used to index into a `VertexBuffer` when drawing.
 #[derive(Debug, Clone, Copy)]
 struct IndexBuffer {
@@ -224,8 +211,8 @@ impl<'a> DrawBuilder<'a> {
         // TODO: Make sure `vertex_array` comes from the right context.
 
         DrawBuilder {
-            vertex_array: vertex_array,
-            draw_mode: draw_mode,
+            vertex_array,
+            draw_mode,
             polygon_mode: None,
             program: None,
             cull: None,
@@ -244,8 +231,9 @@ impl<'a> DrawBuilder<'a> {
     }
 
     pub fn program(&mut self, program: &'a Program) -> &mut DrawBuilder<'a> {
-        assert!(
-            self.context.borrow().raw() == program.context,
+        assert_eq!(
+            self.context.borrow().raw(),
+            program.context,
             "Specified program's context does not match draw builder's context"
         );
         self.program = Some(program);
