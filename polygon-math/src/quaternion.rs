@@ -39,7 +39,7 @@ impl Quaternion {
     /// without changing it.
     pub fn identity() -> Quaternion {
         Quaternion {
-            v: Vector3::zero(),
+            v: Vector3::ZERO,
             w: 1.0,
         }
     }

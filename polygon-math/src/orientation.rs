@@ -43,34 +43,42 @@ impl Orientation {
     }
 
     /// Creates an orientation that rotates an object to look in the specified direction.
-    pub fn look_rotation(forward: Vector3, up: Vector3) -> Orientation {
+    pub fn look_rotation(forward: Vector3, desired_up: Vector3) -> Orientation {
         assert!(!forward.is_zero());
-        assert!(!up.is_zero());
+        assert!(!desired_up.is_zero());
 
-        let source = Vector3::forward();
+        let source = Vector3::FORWARD;
         let forward = forward.normalized();
-        let up = up.normalized();
+        let desired_up = desired_up.normalized();
 
         let dot = source.dot(forward);
 
         if (dot + 1.0).is_zero() {
             // vector a and b point exactly in the opposite direction,
             // so it is a 180 degrees turn around the up-axis
-            return Orientation::axis_angle(up, PI)
+            return Orientation::axis_angle(desired_up, PI);
         }
 
         if (dot - 1.0).is_zero() {
             // Vector a and b point exactly in the same direction
             // so we return the identity quaternion.
-            return Orientation::new()
+            return Orientation::new();
         }
 
-        // let rot_angle = dot.acos();
-        // let rot_axis = Vector3::cross(source, forward).normalized();// source.cross(forward).normalized();
-        // return Orientation::axis_angle(rot_axis, rot_angle)
+         let rot_angle = dot.acos();
+         let rot_axis = Vector3::cross(source, forward).normalized();
+         let forward_with_wrong_up = Orientation::axis_angle(rot_axis, rot_angle);
 
-        // TODO: Correctly take the up vector into account.
-        unimplemented!();
+        // Apply another rotation to `forward_with_wrong_up` to correct the up direction.
+        let closest_up = desired_up.project_onto(forward);
+        if !closest_up.is_zero() {
+            let up_correction_angle = forward_with_wrong_up.up().dot(closest_up.normalized()).acos();
+            let up_correction = Orientation::axis_angle(forward, up_correction_angle);
+
+            up_correction + forward_with_wrong_up
+        } else {
+            forward_with_wrong_up
+        }
     }
 
     /// Creates a quaternion from a set of euler angles.
@@ -137,7 +145,7 @@ impl Orientation {
     /// The right direction for the orientation is the global right vector (positive x axis) as
     /// rotated by the orientation. The returned vector will be normalized.
     pub fn right(self) -> Vector3 {
-        self * Vector3::right()
+        self * Vector3::RIGHT
     }
 
     /// Gets the left direction for the orientation.
@@ -145,7 +153,7 @@ impl Orientation {
     /// The left for the orientation is the global right vector (negative x axis) as
     /// rotated by the orientation. The returned vector will be normalized.
     pub fn left(self) -> Vector3 {
-        self * Vector3::left()
+        self * Vector3::LEFT
     }
 
     /// Gets the up direction for the orientation.
@@ -153,7 +161,7 @@ impl Orientation {
     /// The up direction for the orientation is the global up vector (positive y axis) as
     /// rotated by the orientation. The returned vector will be normalized.
     pub fn up(self) -> Vector3 {
-        self * Vector3::up()
+        self * Vector3::UP
     }
 
     /// Gets the down direction for the orientation.
@@ -161,7 +169,7 @@ impl Orientation {
     /// The down direction for the orientation is the global down vector (negative y axis) as
     /// rotated by the orientation. The returned vector will be normalized.
     pub fn down(self) -> Vector3 {
-        self * Vector3::down()
+        self * Vector3::DOWN
     }
 
     /// Gets the forward direction for the orientation.
@@ -169,7 +177,7 @@ impl Orientation {
     /// The forward direction for the orientation is the global forward vector (negative z axis) as
     /// rotated by the orientation. The returned vector will be normalized.
     pub fn forward(self) -> Vector3 {
-        self * Vector3::forward()
+        self * Vector3::FORWARD
     }
 
     /// Gets the back direction for the orientation.
@@ -177,7 +185,7 @@ impl Orientation {
     /// The back direction for the orientation is the global back vector (positive z axis) as
     /// rotated by the orientation. The returned vector will be normalized.
     pub fn back(self) -> Vector3 {
-        self * Vector3::back()
+        self * Vector3::BACK
     }
 }
 

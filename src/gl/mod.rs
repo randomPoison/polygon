@@ -145,8 +145,8 @@ impl GlRender {
         let mut light_position = [Point::origin(); 8];
         let mut light_position_view = [Point::origin(); 8];
         let mut light_radius = [0.0f32; 8];
-        let mut light_direction = [Vector3::zero(); 8];
-        let mut light_direction_view = [Vector3::zero(); 8];
+        let mut light_direction = [Vector3::ZERO; 8];
+        let mut light_direction_view = [Vector3::ZERO; 8];
 
         let program = self
             .programs
@@ -466,7 +466,7 @@ impl Renderer for GlRender {
                 uniform_declarations,
                 replaced_source);
 
-            GlShader::new(&self.context, replaced_source, ShaderType::Vertex).map_err(|err| BuildMaterialError)?
+            GlShader::new(&self.context, replaced_source, ShaderType::Vertex).map_err(|_err| BuildMaterialError)?
         };
 
         // Generate the GLSL source for the fragment shader.
@@ -515,10 +515,10 @@ impl Renderer for GlRender {
                 uniform_declarations,
                 replaced_source);
 
-            GlShader::new(&self.context, replaced_source, ShaderType::Fragment).map_err(|err| BuildMaterialError)?
+            GlShader::new(&self.context, replaced_source, ShaderType::Fragment).map_err(|_err| BuildMaterialError)?
         };
 
-        let program = Program::new(&self.context, &[vert_shader, frag_shader]).map_err(|err| BuildMaterialError)?;
+        let program = Program::new(&self.context, &[vert_shader, frag_shader]).map_err(|_err| BuildMaterialError)?;
 
         let program_id = self.shader_counter.next();
         self.programs.insert(program_id, program);

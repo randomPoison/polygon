@@ -13,7 +13,7 @@ impl Anchor {
         Anchor {
             position: Point::origin(),
             orientation: Orientation::new(),
-            scale: Vector3::one(),
+            scale: Vector3::ONE
         }
     }
 

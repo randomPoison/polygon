@@ -16,6 +16,15 @@ pub struct Vector3 {
 }
 
 impl Vector3 {
+    pub const ZERO: Vector3 = Vector3 { x: 0.0, y: 0.0, z: 0.0 };
+    pub const ONE: Vector3 = Vector3 { x: 1.0, y: 1.0, z: 1.0 };
+    pub const RIGHT: Vector3 = Vector3 { x: 1.0, y: 0.0, z: 0.0 };
+    pub const LEFT: Vector3 = Vector3 { x: -1.0, y: 0.0, z: 0.0 };
+    pub const UP: Vector3 = Vector3 { x: 0.0, y: 1.0, z: 0.0 };
+    pub const DOWN: Vector3 = Vector3 { x: 0.0, y: -1.0, z: 0.0 };
+    pub const FORWARD: Vector3 = Vector3 { x: 0.0, y: 0.0, z: -1.0 };
+    pub const BACK: Vector3 = Vector3 { x: 0.0, y: 0.0, z: 1.0 };
+
     pub fn new(x: f32, y: f32, z: f32) -> Vector3 {
         Vector3 {
             x: x,
@@ -32,44 +41,16 @@ impl Vector3 {
         }
     }
 
-    pub fn zero() -> Vector3 {
-        Vector3::new(0.0, 0.0, 0.0)
-    }
-
-    pub fn one() -> Vector3 {
-        Vector3::new(1.0, 1.0, 1.0)
-    }
-
-    pub fn right() -> Vector3 {
-        Vector3::new(1.0, 0.0, 0.0)
-    }
-
-    pub fn left() -> Vector3 {
-        Vector3::new(-1.0, 0.0, 0.0)
-    }
-
-    pub fn up() -> Vector3 {
-        Vector3::new(0.0, 1.0, 0.0)
-    }
-
-    pub fn down() -> Vector3 {
-        Vector3::new(0.0, -1.0, 0.0)
-    }
-
-    pub fn forward() -> Vector3 {
-        Vector3::new(0.0, 0.0, -1.0)
-    }
-
-    pub fn back() -> Vector3 {
-        Vector3::new(0.0, 0.0, 1.0)
-    }
-
     pub fn cross(first: Vector3, second: Vector3) -> Vector3 {
         Vector3 {
             x: first.y * second.z - first.z * second.y,
             y: first.z * second.x - first.x * second.z,
             z: first.x * second.y - first.y * second.x,
         }
+    }
+
+    pub fn project_onto(self, base: Vector3) -> Vector3 {
+        self.normalized() * Vector3::dot(self, base.normalized())
     }
 
     pub fn set_x(mut self, x: f32) -> Vector3 {
