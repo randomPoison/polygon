@@ -11,7 +11,6 @@ mod macros;
 pub mod anchor;
 pub mod camera;
 pub mod geometry;
-pub mod gl;
 pub mod light;
 pub mod material;
 pub mod mesh_instance;
