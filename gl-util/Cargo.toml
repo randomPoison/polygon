@@ -1,8 +1,0 @@
-[package]
-
-name = "gl-util"
-version = "0.1.0"
-authors = ["David LeGare <excaliburhissheath@gmail.com>"]
-
-[dependencies]
-gl-raw = { path = "../gl-raw" }

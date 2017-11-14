@@ -6,14 +6,8 @@ authors = ["David LeGare <excaliburhissheath@gmail.com>"]
 
 [dependencies]
 bmp = "0.3"
-gl-util = { path = "./gl-util" }
 image = "0.15"
 polygon-math = { path = "./polygon-math" }
 polygon-material = { path = "./polygon-material" }
-
-[dev_dependencies]
-gl-winit = { path = "./gl-winit" }
-tobj = "0.1.6"
-winit = "0.7"
 
 [workspace]
