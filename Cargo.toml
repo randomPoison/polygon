@@ -5,8 +5,10 @@ version = "0.1.0"
 authors = ["David LeGare <excaliburhissheath@gmail.com>"]
 
 [dependencies]
-bmp = "0.3"
-image = "0.15"
+image = "0.15.0"
+gfx = "0.16.1"
+gfx_window_glutin = "0.18.0"
+glutin = "0.10.1"
 polygon-math = { path = "./polygon-math" }
 polygon-material = { path = "./polygon-material" }
 
