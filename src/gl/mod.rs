@@ -647,6 +647,29 @@ impl Renderer for GlRender {
         mesh_instance_id
     }
 
+    fn remove_mesh_instance(&mut self, id: MeshInstanceId) -> Option<MeshInstance> {
+        if let Some(mesh_instance) = self.mesh_instances.remove(&id) {
+            // Remove the mesh instance from the bucket based on its material type.
+            match mesh_instance.material_type() {
+                &MaterialType::Shared(material_id) => {
+                    self.mesh_instances_with_shared_materials
+                        .get_mut(&material_id)
+                        .unwrap()
+                        .retain(|&instance_id| instance_id != id);
+                }
+
+                &MaterialType::Owned(_) => {
+                    self.mesh_instances_with_owned_material
+                        .retain(|&instance_id| instance_id != id);
+                }
+            }
+
+            return Some(mesh_instance);
+        }
+
+        None
+    }
+
     fn get_mesh_instance(&self, id: MeshInstanceId) -> Option<&MeshInstance> {
         self.mesh_instances.get(&id)
     }
@@ -662,6 +685,10 @@ impl Renderer for GlRender {
         assert!(old.is_none());
 
         anchor_id
+    }
+
+    fn remove_anchor(&mut self, id: AnchorId) -> Option<Anchor> {
+        self.anchors.remove(&id)
     }
 
     fn get_anchor(&self, anchor_id: AnchorId) -> Option<&Anchor> {
@@ -681,6 +708,10 @@ impl Renderer for GlRender {
         camera_id
     }
 
+    fn remove_camera(&mut self, id: CameraId) -> Option<Camera> {
+        self.cameras.remove(&id)
+    }
+
     fn get_camera(&self, camera_id: CameraId) -> Option<&Camera> {
         self.cameras.get(&camera_id)
     }
@@ -696,6 +727,10 @@ impl Renderer for GlRender {
         assert!(old.is_none());
 
         light_id
+    }
+
+    fn remove_light(&mut self, id: LightId) -> Option<Light> {
+        self.lights.remove(&id)
     }
 
     fn get_light(&self, light_id: LightId) -> Option<&Light> {

@@ -62,6 +62,9 @@ pub trait Renderer: 'static + Send {
     /// Registers a mesh instance with the renderer, returning a unique id for that mesh instance.
     fn register_mesh_instance(&mut self, mesh_instance: MeshInstance) -> MeshInstanceId;
 
+    /// Removes a mesh instance from the renderer, returning it.
+    fn remove_mesh_instance(&mut self, id: MeshInstanceId) -> Option<MeshInstance>;
+
     /// Gets a reference to a registered mesh instance.
     fn get_mesh_instance(&self, id: MeshInstanceId) -> Option<&MeshInstance>;
 
@@ -70,6 +73,9 @@ pub trait Renderer: 'static + Send {
 
     /// Registers an anchor with the renderer, returning a unique id for the anchor.
     fn register_anchor(&mut self, anchor: Anchor) -> AnchorId;
+
+    /// Removes an anchor from the renderer, returning it.
+    fn remove_anchor(&mut self, id: AnchorId) -> Option<Anchor>;
 
     /// Gets a reference to a registered anchor.
     fn get_anchor(&self, anchor_id: AnchorId) -> Option<&Anchor>;
@@ -80,6 +86,9 @@ pub trait Renderer: 'static + Send {
     /// Registers a camera with the renderer, returning a unique id for the camera.
     fn register_camera(&mut self, camera: Camera) -> CameraId;
 
+    /// Removes a camera from the renderer, returning it.
+    fn remove_camera(&mut self, id: CameraId) -> Option<Camera>;
+
     /// Gets a reference to a registered camera.
     fn get_camera(&self, camera_id: CameraId) -> Option<&Camera>;
 
@@ -88,6 +97,9 @@ pub trait Renderer: 'static + Send {
 
     /// Registers a light with the renderer, returning a unique id for the light.
     fn register_light(&mut self, light: Light) -> LightId;
+
+    /// Removes a light from the renderer, returning it.
+    fn remove_light(&mut self, id: LightId) -> Option<Light>;
 
     /// Gets a reference to a registered light.
     fn get_light(&self, light_id: LightId) -> Option<&Light>;
